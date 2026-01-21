@@ -12,12 +12,11 @@ st.caption("我会像医生一样询问您的详细情况，请耐心回答。")
 #     api_key='ollama', 
 # )
 
-# --- 修改后 (连接云端 DeepSeek) ---
+# 修改代码，让它从云端的“保险箱”里读取密码
 client = OpenAI(
-    # 这是 DeepSeek 的官方地址
     base_url='https://api.deepseek.com', 
-    # 把下面的 sk-xxx 换成你刚才复制的那个长字符串
-    api_key='sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 
+    # st.secrets 就像 R 里的环境变量，自动读取你刚才填在网页上的密码
+    api_key=st.secrets["DEEPSEEK_API_KEY"], 
 )
 
 
