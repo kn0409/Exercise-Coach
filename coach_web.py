@@ -60,10 +60,10 @@ def save_to_google_sheet(role, content, ip):
 
 # --- 3. CSS 样式 (保持不变) ---
 def inject_custom_css(font_size_mode):
-    if font_size_mode == "👴 长辈版 (超大字)":
+    if font_size_mode == "👴 长辈版":
         st.markdown("""
             <style>
-            html, body, [class*="css"] { font-size: 26px !important; font-weight: 500 !important; }
+            html, body, [class*="css"] { font-size: 22px !important; font-weight: 500 !important; }
             h1 { font-size: 40px !important; color: #d9534f !important; }
             .stButton button {
                 height: 3.5em !important; font-size: 24px !important;
@@ -93,7 +93,7 @@ st.title("🧡 社区健康指导员")
 
 c1, c2 = st.columns([2, 1]) 
 with c1:
-    mode = st.radio("👀 选择字体大小：", ["📱 标准版", "👴 长辈版 (超大字)"], index=1, horizontal=True)
+    mode = st.radio("👀 选择字体大小：", ["📱 标准版", "👴 长辈版"], index=0, horizontal=True)
 with c2:
     st.write("") 
     st.write("") 
@@ -132,7 +132,7 @@ with col_a:
     if st.button("🦵 膝盖疼"): user_trigger = "我的膝盖有点疼，平时上下楼梯不舒服，该怎么运动？"
     if st.button("💓 高血压"): user_trigger = "我有高血压，运动的时候要注意什么？"
 with col_b:
-    if st.button("📉 我想减肥"): user_trigger = "我最近胖了，想减肥，但我不想去健身房。"
+    if st.button("📉 我想减肥"): user_trigger = "我最近胖了，想减肥，应该怎么运动？"
     if st.button("📅 制定计划"): user_trigger = "请给我制定一个适合我的四周运动计划。"
 st.divider()
 
