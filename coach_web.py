@@ -172,10 +172,48 @@ if prompt := st.chat_input("也可以在这里打字...") or user_trigger:
     if user_trigger:
         st.rerun()
 
-# --- 9. 隐藏式后台入口 ---
+# ... 前面的代码都不用动 ...
+
+# --- 9. 带密码锁的后台入口 ---
 with st.sidebar:
+    st.divider()
     st.caption("🔒 管理员后台")
-    # 这里就不会报错了，因为 LOG_FILE 在第一行就定义了
-    if os.path.exists(LOG_FILE):
-        with open(LOG_FILE, "rb") as file:
-            st.download_button("📥 导出数据 CSV", file, "logs.csv", "text/csv")
+    
+    # 1. 创建一个密码输入框
+    # type="password" 会把输入的字变成圆点，防止被人偷看
+    admin_pwd = st.text_input("请输入管理员密码", type="password")
+    
+    # 2. 从 Secrets 读取正确密码
+    # 如果没配置 secrets (本地测试)，默认密码是 "admin"
+    if "ADMIN_PASSWORD" in st.secrets:
+        correct_pwd = st.secrets["ADMIN_PASSWORD"]
+    else:
+        correct_pwd = "admin"
+
+    # 3. 校验密码
+    if admin_pwd == correct_pwd:
+        st.success("✅ 已验证")
+        
+        # 只有密码对的时候，才去读文件、显示按钮
+        if os.path.exists(LOG_FILE):
+            with open(LOG_FILE, "rb") as file:
+                st.download_button(
+                    label="📥 点击下载所有数据 (CSV)",
+                    data=file,
+                    file_name=f"health_logs_{datetime.datetime.now().strftime('%Y%m%d')}.csv",
+                    mime="text/csv"
+                )
+            
+            # 增加一个显示数据条数的功能，让你心里有数
+            try:
+                with open(LOG_FILE, "r", encoding='utf-8-sig') as f:
+                    row_count = sum(1 for row in f) - 1 # 减去表头
+                st.caption(f"当前累计数据：{row_count} 条")
+            except: pass
+            
+        else:
+            st.warning("暂无数据记录")
+    
+    elif admin_pwd:
+        # 如果密码输错了（且不是空的），提示错误
+        st.error("❌ 密码错误")
